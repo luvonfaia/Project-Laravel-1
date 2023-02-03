@@ -36,4 +36,8 @@ Route::middleware('auth')->group(function(){
     Route::get('/create-post', [PostController::class, 'showCreateForm']); //routa cu get atunci cand dam click pe create post in login section
     Route::post('/create-post', [PostController::class, 'storeNewPost']);  //routa cu post atunci cand trimitem ce a completat utilizatorul in baza de date
     Route::get('/post/{post}', [PostController::class, 'viewSinglePost']);
+    Route::delete('/post/{post}', [PostController::class, 'delete']);
 });
+
+// route profil
+Route::get('/profile/{user:username}', [UserController::class, 'profile']);
