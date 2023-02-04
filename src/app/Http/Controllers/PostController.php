@@ -10,9 +10,20 @@ class PostController extends Controller
 {
     //
 
+    public function delete(Post $post)
+    {
+        if (auth()->user()->cannot('delete', $post)){
+            return 'nu poti sterge!';
+        }
+        $post->delete();
+
+        return redirect('/profile/' . auth()->user()->username)->with('succes', 'Postare stearsa cu suscces!');
+    }
+
+
     public function viewSinglePost(Post $post) //metoda care cu ajutorul model Post -> laravel se uita automat in baza de date si cauta title,body,user_id
     {
-        $post['body']= strip_tags(Str::markdown($post->body), '<p><ul><ol><li></li></ol></ul><em></em><h3></h3><br>'); //se suprascrie valoarea lui body si o interpretam ca markdown (vezi markdown cheatsheet pe github)
+      $post['body']= strip_tags(Str::markdown($post->body), '<p><ul><ol><li></li></ol></ul><em></em><h3></h3><br>'); //se suprascrie valoarea lui body si o interpretam ca markdown (vezi markdown cheatsheet pe github)
 
         return view('single-post', ['post' => $post]);
     }

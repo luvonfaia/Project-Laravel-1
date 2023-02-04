@@ -8,6 +8,17 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    public function profile(User $user)   /*metoda pentru profile unde $user este o instanta a model/user. In felul asta
+        putem accesa orice de din user */
+    {
+
+        return view('profile-posts',
+            [
+                'username' => $user->username,
+                'posts' => $user->posts()->latest()->get(),
+                'postCount' => $user->posts()->count()
+            ]); //se face loop in templata profile-posts.blade.puser
+    }
     public function logout(){           // redirect cand da click pe logout si il duce pe homepage
         auth()->logout();
         return redirect('/homepage')->with('success', 'Ai iesit din contul tau!');
