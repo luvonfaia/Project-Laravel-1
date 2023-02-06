@@ -10,14 +10,35 @@ class PostController extends Controller
 {
     //
 
+    public function actuallyUpdate(Post $post, Request $request) {
+        $incomingFields = $request->validate([
+            'title' => 'required',
+            'body' => 'required'
+        ]);
+
+        $incomingFields['title'] = strip_tags($incomingFields['title']); // pt insarare de tag-uri html in body (mallicious)
+        $incomingFields['body'] = strip_tags($incomingFields['body']);
+
+        $post->update($incomingFields); /* $post este conectat la db avand in spate un model(\Models\Post.php) iar aici ne uitam in $post apeland o metoda
+        update caruia ii dam valori din variabila incomingFields*/
+
+        return back()->with('success', 'Postare modificata cu succes!');
+    }
+
+    public function showEditForm(Post $post){
+        return view('edit-post', ['post' => $post]);
+    } 
+
+
+
     public function delete(Post $post)
     {
-        if (auth()->user()->cannot('delete', $post)){
+        if (auth()->user()->cannot('delete', $post)){ // verificare daca cel care doreste sa stearga postarea este chiar autorul. Daca nu este butonul de delete nu apare
             return 'nu poti sterge!';
         }
-        $post->delete();
+        $post->delete(); // daca este autorul se va sterge
 
-        return redirect('/profile/' . auth()->user()->username)->with('succes', 'Postare stearsa cu suscces!');
+        return redirect('/profile/' . auth()->user()->username)->with('succes', 'Postare stearsa cu suscces!'); //si va fii redirectionat la celelalte postari(daca exista)
     }
 
 

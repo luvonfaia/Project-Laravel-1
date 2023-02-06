@@ -37,7 +37,10 @@ Route::middleware('auth')->group(function(){
     Route::post('/create-post', [PostController::class, 'storeNewPost']);  //routa cu post atunci cand trimitem ce a completat utilizatorul in baza de date
     Route::get('/post/{post}', [PostController::class, 'viewSinglePost']);
     Route::delete('/post/{post}', [PostController::class, 'delete']);
+    
 });
+Route::get('/post/{post}/edit', [PostController::class, 'showEditForm'])->middleware('can:update,post'); //routa pentru update , pe utilizatorul autentificat
+Route::put('/post/{post}', [PostController::class, 'actuallyUpdate'])->middleware('can:update,post'); //routa pentru atunci cand se da submit la form-ul updatat
 
 // route profil
 Route::get('/profile/{user:username}', [UserController::class, 'profile']);
